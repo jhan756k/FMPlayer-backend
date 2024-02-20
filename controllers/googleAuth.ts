@@ -1,5 +1,8 @@
 import {NextFunction, Request, Response} from 'express';
+import userExists from "../tools/userExists";
 import axios from 'axios';
+import connectDB from "../tools/connectDB";
+import user from "../models/User";
 
 const GOOGLE_AUTH_TOKEN_URL = "https://oauth2.googleapis.com/token"
 
@@ -27,12 +30,13 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
     );
 
   const access_token = data['access_token'];
+  await userExists(access_token);
 
-  const playlists = await axios.get(
-    `https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&access_token=${access_token}`,
-  );
+  // const playlists = await axios.get(
+  //   `https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&access_token=${access_token}`,
+  // );
 
-  console.log(playlists.data.items);
+  // console.log(playlists.data.items);
 
   return res.redirect('http://localhost:3000');
 }
