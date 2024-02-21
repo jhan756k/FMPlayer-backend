@@ -1,10 +1,8 @@
 import {NextFunction, Request, Response} from 'express';
-import userExists from "../tools/userExists";
+import checkUser from "../tools/checkUser";
 import axios from 'axios';
-import connectDB from "../tools/connectDB";
-import user from "../models/User";
 
-const GOOGLE_AUTH_TOKEN_URL = "https://oauth2.googleapis.com/token"
+const GOOGLE_AUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 
 const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
   const code = req.query.code;
@@ -25,20 +23,26 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
   })
     .catch((err) => {
         console.log(err);
-        return;
       }
     );
 
   const access_token = data['access_token'];
-  await userExists(access_token);
+  const check = await checkUser(access_token);
+  const refresh_token = data['refresh_token'];
+
+
+  if (check !== "fail") {
+    res.cookie('login', check, {httpOnly: true});
+  } else {
+    alert("Failed to authenticate");
+  }
 
   // const playlists = await axios.get(
   //   `https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&access_token=${access_token}`,
   // );
 
   // console.log(playlists.data.items);
-
-  return res.redirect('http://localhost:3000');
+  res.redirect('http://localhost:3000');
 }
 
 export default googleAuth;
