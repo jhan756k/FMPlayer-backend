@@ -11,7 +11,7 @@ const generateJWT = async (user: any, access_token: string) => {
 
   // @ts-ignore
   const key: string = process.env.JWT_SECRET;
-  return JWT.sign(payload, key, {expiresIn: '30d'});
+  return JWT.sign(payload, key);
 }
 
 export default generateJWT;

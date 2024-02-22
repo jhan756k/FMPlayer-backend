@@ -14,6 +14,7 @@ const checkUser = async (access_token: string) => {
 
   if (!user) {
     try {
+      console.log(userData.data);
       const newUser = await User.create({
         subId: userData.data.sub,
         email: userData.data.email,

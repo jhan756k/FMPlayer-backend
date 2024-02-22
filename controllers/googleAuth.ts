@@ -34,14 +34,8 @@ const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
   if (check !== "fail") {
     res.cookie('login', check, {httpOnly: true});
   } else {
-    alert("Failed to authenticate");
+    return res.status(400).send("Failed to authenticate");
   }
-
-  // const playlists = await axios.get(
-  //   `https://www.googleapis.com/youtube/v3/playlists?part=snippet&mine=true&access_token=${access_token}`,
-  // );
-
-  // console.log(playlists.data.items);
   res.redirect('http://localhost:3000');
 }
 
